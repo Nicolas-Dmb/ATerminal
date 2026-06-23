@@ -65,6 +65,14 @@ docker compose down       # arrête et supprime les conteneurs
 docker compose down -v    # idem + supprime les volumes
 ```
 
+## Logs
+
+```bash
+docker compose logs <service>        # service = engine | api | frontend
+docker compose logs engine -f        # suivre en direct (Ctrl+C pour quitter)
+docker compose logs engine --tail 20 # les 20 dernières lignes
+```
+
 ## Développement local
 
 Chaque service a son propre README avec les commandes de dev natives (sans Docker) :

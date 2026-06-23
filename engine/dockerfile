@@ -24,14 +24,19 @@ RUN cargo build --release
 
 FROM debian:trixie-slim
 
+# ca-certificates : TLS vers Postgres ; git : utilisé par clone.sh pour cloner les repos à analyser
 RUN apt update && \
-    apt install -y --no-install-recommends ca-certificates && \
+    apt install -y --no-install-recommends ca-certificates git && \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /etc/group /etc/group
+
+WORKDIR /app
 USER engine:engine
 
 COPY --from=build --chown=engine:engine /app/target/release/engine /app/engine
+# clone.sh est invoqué en chemin relatif (bash clone.sh ...) → doit être dans le WORKDIR
+COPY --chown=engine:engine clone.sh /app/clone.sh
 
 ENTRYPOINT ["/app/engine"]

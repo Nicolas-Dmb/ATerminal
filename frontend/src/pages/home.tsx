@@ -1,7 +1,7 @@
 import { useState } from "react";
 import LeftColumn from "../components/leftColumn";
 import type { RunResponse } from "../features/analyse";
-import FlowDiagram from "../components/flowDiagram";
+import FlowDiagram from "../components/FlowDiagram";
 
 export default function Home() {
   const [selectedAnalysis, setSelectedAnalysis] = useState<RunResponse | null>(null);

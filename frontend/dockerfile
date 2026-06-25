@@ -7,6 +7,12 @@ COPY package.json package-lock.json ./
 RUN npm ci
 
 COPY . .
+
+# VITE_API_URL est inliné dans le bundle au build (Vite lit les vars VITE_* depuis
+# l'env du process). Ce n'est PAS un secret : la valeur finit dans le navigateur.
+# Fournie par la CI via --build-arg ; en local le fichier .env prend le relais.
+ARG VITE_API_URL
+ENV VITE_API_URL=$VITE_API_URL
 RUN npm run build
 
 # --- Étape 2 : service des fichiers statiques via nginx (non-root) ---

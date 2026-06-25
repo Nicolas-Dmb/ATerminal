@@ -64,16 +64,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Vérif secret présent
-        run: |
-          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then
-            echo "❌ SSH_PRIVATE_KEY est VIDE — le secret n'est pas vu par ce run"
-            exit 1
-          fi
-          echo "✅ SSH_PRIVATE_KEY présent (${#KEY} caractères)"
-        env:
-          KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-
       # On envoie le compose de prod sur le VPS (les .env applicatifs y sont
       # déjà, posés une fois à la main, et ne sont jamais écrasés).
       - name: Copie du compose vers le VPS
@@ -82,6 +72,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.VPS_PORT }}
           source: docker-compose.prod.yml
           target: /projects/aterminal
 
@@ -91,6 +82,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.VPS_PORT }}
           # GHCR_TOKEN = GITHUB_TOKEN du run : valide pour tirer les images
           # pendant ce run → pas de PAT à stocker sur le VPS.
           envs: GHCR_TOKEN,GHCR_USER,TAG

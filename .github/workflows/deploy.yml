@@ -63,6 +63,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Vérif secret présent
+        run: |
+          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then
+            echo "❌ SSH_PRIVATE_KEY est VIDE — le secret n'est pas vu par ce run"
+            exit 1
+          fi
+          echo "✅ SSH_PRIVATE_KEY présent (${#KEY} caractères)"
+        env:
+          KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
       # On envoie le compose de prod sur le VPS (les .env applicatifs y sont
       # déjà, posés une fois à la main, et ne sont jamais écrasés).
       - name: Copie du compose vers le VPS
